@@ -3,12 +3,12 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const dbUrl = process.env.dbUrl;
+const dbUrl =  'postgresql://neondb_owner:npg_xdtKheCPnl74@ep-withered-meadow-ag1fgvaw-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require'; //change it later
 const url =new URL(dbUrl);
-const username = url.username;
-const password = url.password;
-const host = url.hostname;
-const port = url.port;
+const username = 'neondb_owner';
+const password = 'npg_xdtKheCPnl74';
+const host = 'ep-withered-meadow-ag1fgvaw-pooler.c-2.eu-central-1.aws.neon.tech';
+const port =5432;
 const database = url.pathname.slice(1);
 
 const sequelize = new Sequelize(database, username, password,{
