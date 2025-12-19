@@ -3,6 +3,8 @@ import path from 'path';
 import { pathToFileURL } from 'url';
 import sequelize from '../src/config/database.js';
 import Sequelize from 'sequelize';
+import { up } from '../src/migrations/20251226011605-add-timestamp-to-alert.js';
+//import { up } from '../src/migrations/20251226011605-add-timestamp-to-transaction.js';
 
 const migrationsDir = path.resolve('src', 'migrations');
 
@@ -44,6 +46,7 @@ async function run() {
 
     console.log(`Applying migration: ${file}`);
     const mod = await import(pathToFileURL(path.join(migrationsDir, file)).href);
+    
     const migration = mod.default ?? mod;
     if (typeof migration.up !== 'function') {
       throw new Error(`Migration ${file} does not export an 'up' function`);

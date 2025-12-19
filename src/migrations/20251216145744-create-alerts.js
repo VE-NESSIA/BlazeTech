@@ -28,6 +28,7 @@ const alert_migration = {
     await queryInterface.addIndex('Alerts', ['customer_id']);
     await queryInterface.addIndex('Alerts', ['severity']);
     await queryInterface.addIndex('Alerts', ['created_at']);
+    
   },
 
   async down (queryInterface, Sequelize) {

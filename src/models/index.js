@@ -1,4 +1,5 @@
 import sequelize from '../config/database.js';
+import { Sequelize } from 'sequelize';
 import Customer from './Customer.js';
 import Transaction from './Transaction.js';
 import Alert from './Alert.js';
@@ -11,7 +12,8 @@ const models = {
     Alert,
     ApiClient,
     ApiKey,
-    sequelize
+    sequelize,
+    Sequelize
 };
 
 ApiClient.hasMany(Customer,{foreignKey:'api_client_id'}),
@@ -23,10 +25,12 @@ Transaction.belongsTo(Customer, {foreignKey: 'customer_id'});
 ApiClient.hasMany(Alert, {foreignKey: 'api_client_id'});
 Alert.belongsTo(ApiClient, {foreignKey : 'api_client_id'});
 
-// Api keys can be scoped to a client
 ApiClient.hasMany(ApiKey, { foreignKey: 'api_client_id' });
+
 ApiKey.belongsTo(ApiClient, { foreignKey: 'api_client_id' });
+
 Transaction.hasOne(Alert, {foreignKey: 'transaction_id'});
+
 Alert.belongsTo(Transaction,{foreignKey: 'transaction_id'});
 
 

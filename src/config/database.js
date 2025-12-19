@@ -3,20 +3,20 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const dbUrl =  'postgresql://neondb_owner:npg_xdtKheCPnl74@ep-withered-meadow-ag1fgvaw-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require'; //change it later
+const dbUrl =  process.env.DATABASE_URL;
 const url =new URL(dbUrl);
-const username = 'neondb_owner';
-const password = 'npg_xdtKheCPnl74';
-const host = 'ep-withered-meadow-ag1fgvaw-pooler.c-2.eu-central-1.aws.neon.tech';
-const port =5432;
+const username =  process.env.DB_USERNAME;
+const password = process.env.DB_PASSWORD;
+const host = process.env.DB_HOST;
+const port =process.env.DB_PORT;
 const database = url.pathname.slice(1);
 
 const sequelize = new Sequelize(database, username, password,{
 
         host: host,
         port: port,
-        dialect: 'postgres',
-        logging: process.env.NODE_ENV === 'development' ? console.log : false,
+        dialect: process.env.DB_DIALECT,
+        logging: process.env.NODE_ENV ? console.log : false,
         dialectOptions: {
             ssl:{
                 require:true,

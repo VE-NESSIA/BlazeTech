@@ -7,11 +7,15 @@ const customer_migration= { async up (queryInterface, Sequelize) {
       
       name:{type:Sequelize.STRING, allowNull : false, validate:{ notEmpty:true}},
       
+      gender: {type: Sequelize.STRING, allowNull:false},    
+      
       email:{type:Sequelize.STRING, allowNull: false, unique: true, validate:{isEmail:true}},
 
       phone:{type:Sequelize.STRING, allowNull: false, validate:{ notEmpty:true}},
       
       address:{ type:Sequelize.JSONB,  defaultValue: {}},
+
+      national_id:{type:Sequelize.TEXT, allowNull:false},
       
       risk_score:{ type:Sequelize.INTEGER, defaultValue: 0, validate:{min:0,
       max:100},

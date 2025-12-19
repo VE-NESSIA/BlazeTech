@@ -10,7 +10,9 @@ const Alert = sequelize.define('Alert', {
 
     alert_type:{ type: DataTypes.ENUM('KYC', 'Fraud', 'Compliance', 'Risk'), allowNull: false },
 
-    severity:{ type: DataTypes.ENUM('low', 'medium', 'high', 'critical'), defaultValue: 'low'},
+    severity:{ type: DataTypes.ENUM('low', 'medium', 'high', 'critical'), defaultValue: 'low'}, 
+    
+    color: { type: DataTypes.ENUM('green', 'yellow', 'red'), defaultValue: 'green' },
 
     description:{ type: DataTypes.TEXT, allowNull: true },
 

@@ -12,7 +12,7 @@ const ApiClient = sequelize.define('ApiClient', {
 
     api_key: {type: DataTypes.STRING, unique: true, allowNull: false},
 
-    occupational_role: {type: DataTypes.ENUM('Compliance Officer', 'Fraud Analyst', 'Risk Manager', 'Operations/Admin', 'Developer/Technical', 'Executive'), defaultValue: 'Developer/Technical'},
+    occupational_role: {type: DataTypes.ENUM('Compliance Officer', 'Fraud Analyst', 'Risk Manager', 'Operations/Admin', 'Developer/Technical', 'Executive'), defaultValue: 'Compliance Officer'},
 
     role: {type: DataTypes.ENUM('admin', 'user', 'viewer'), defaultValue: 'user'},
 

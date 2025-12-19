@@ -7,7 +7,9 @@
     "test": "node scripts/run-tests.js",
     "start": "node src/index.js",
     "dev": "nodemon src/app.js",
-    "db:seed": "node scripts/run-seeds.js",
+    "db:seed-create": "node scripts/create-seeder.js",
+    "db:seed-run": "node scripts/run-seeds.js",
+    "db:seed-generate-all": "node scripts/generate-all-seeders.js",
     "db:migrate": "node scripts/run-migrations.js",
     "db:migrate:undo": "echo \"Use sequelize-cli for undo operations or implement a custom undo runner.\"",
     "db:reset": "node scripts/run-migrations.js && node scripts/run-seeds.js"
@@ -17,13 +19,15 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@faker-js/faker": "^10.1.0",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
     "pg": "^8.16.3",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.37.7",
-    "bcryptjs": "^2.4.3"
+    "sequelize": "^6.37.7"
   },
   "devDependencies": {
     "nodemon": "^3.1.11",
