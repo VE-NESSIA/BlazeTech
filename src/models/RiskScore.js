@@ -1,25 +1,33 @@
-import {DataTypes} from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
-import Customer from './Customer.js';
 
-const RiskScore = sequelize.define('RiskScore', {
-    id: { type:DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey:true},
 
-    score: {type:DataTypes.INTEGER, allowNull: false, validate: { min:300, max: 850}},
+export default class RiskScore extends Model {
+    static initModel(sequelize) {
+    RiskScore.init(
+    {
+        id: { type:DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey:true},
 
-    type: {type:DataTypes.ENUM('credit', 'fraud', 'overall'), allowNull: false},
+        score: {type:DataTypes.INTEGER, allowNull: false, validate: { min:300, max: 850}},
 
-    factors: { type:DataTypes.JSONB, allowNull: true, defaultValue: {}},
+        type: {type:DataTypes.ENUM('credit', 'fraud', 'overall'), allowNull: false},
 
-    customerId: { type:DataTypes.UUID, allowNull: false, field: 'customer_id'}
+        factors: { type:DataTypes.JSONB, allowNull: true, defaultValue: {}},
+
+        customerId: { type:DataTypes.UUID, allowNull: false, field: 'customer_id'}
+
 },
-{
-    tableName: 'risk_scores',
-    timestamps: true,
-    underscored: true
-});
 
-Customer.hasMany(RiskScore, { foreignKey: 'customer_id'});
-RiskScore.belongsTo(Customer, { foreignKey: 'customer_id'});
+    {
+        sequelize,
+        modelName: 'RiskScore',
+        tableName: 'risk_scores',
+        timestamps: false,
+        underscored: false
+    }
+    );
 
-export default RiskScore;
+
+return RiskScore;
+
+    }};

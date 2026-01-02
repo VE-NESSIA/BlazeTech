@@ -1,28 +1,35 @@
-import {DataTypes} from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
 
-const Customer = sequelize.define('Customer', {
-    id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
-    
-    name: { type: DataTypes.STRING, allowNull: false, validate: { notEmpty: true } },
-    
-    email: { type: DataTypes.STRING, allowNull: false, unique: true, validate: { isEmail: true } },
 
-    gender: {type: DataTypes.STRING, allowNull:false},
-    
-    phone: { type: DataTypes.STRING, allowNull: false, validate: { notEmpty: true } },
-    
-    address: { type: DataTypes.JSONB, defaultValue: {} },
+export default class Customer extends Model {
+    static initModel(sequelize) {
+    Customer.init(
+    {
+        id: {type:DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true},
 
-    national_id:{type:DataTypes.TEXT, allowNull:false},
+        name: { type: DataTypes.STRING, allowNull: false, validate: { notEmpty: true } },
     
-    risk_score: { type: DataTypes.INTEGER, defaultValue: 0, validate: { min: 0, max: 100 } }
-}, {
-    tableName: 'Customers',
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
-    underscored: true
-});
+        email: { type: DataTypes.STRING, allowNull: false, unique: true, validate: { isEmail: true } },
 
-export default Customer;
+        gender: {type: DataTypes.STRING, allowNull:false},
+    
+        phone: { type: DataTypes.STRING, allowNull: false, validate: { notEmpty: true } },
+    
+        address: { type: DataTypes.JSONB, defaultValue: {} },
+
+        national_id:{type:DataTypes.TEXT, allowNull:false},
+    
+        risk_score: { type: DataTypes.INTEGER, defaultValue: 0, validate: { min: 0, max: 100 } }
+    },
+    {
+        sequelize,
+        modelName: 'Customer',
+        tableName: 'Customers',
+        timestamps: true,
+        underscored: true
+    }
+    );
+    return Customer;
+}
+}

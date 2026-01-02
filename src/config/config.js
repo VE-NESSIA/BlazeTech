@@ -5,7 +5,7 @@ dotenv.config();
 const databaseConfig = {
     "development" : {
         url:process.env.DATABASE_URL,
-        dialect:process.env.DB_DIALECT,
+        dialect:process.env.DB_DIALECT || 'postgres',
         dialectOptions: {
             ssl: {
                 require: true,
@@ -15,7 +15,7 @@ const databaseConfig = {
     },
     "test" : {
         url:process.env.DATABASE_URL,
-        dialect:process.env.DB_DIALECT,
+        dialect:process.env.DB_DIALECT || 'postgres',
         dialectOptions: {
             ssl: {
                 require: true,
@@ -26,7 +26,7 @@ const databaseConfig = {
     },
     "production" : {
         url:process.env.DATABASE_URL,
-        dialect:process.env.DB_DIALECT,
+        dialect:process.env.DB_DIALECT || 'postgres',
         dialectOptions: {
             ssl: {
                 require: true,

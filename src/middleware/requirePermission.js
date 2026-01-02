@@ -2,6 +2,9 @@ const ROLE_PERMISSIONS = {
   // platform_admin has full platform access
 platform_admin: ['*'],
 
+user: ["read_customers","check_transactions","view_alerts", 'view_risk_scores'],
+
+
   // org_admin can manage their organization and keys
 org_admin: ['manage_api_keys', 'read_customers', 'view_alerts', 'view_risk_scores', 'manage_clients'],
 
@@ -25,8 +28,13 @@ return (req, res, next) => {
     if (rolePerms.includes('*') || rolePerms.includes(permission)) return next();
     }
 
+    console.log('USER:', req.user);
+    console.log('REQUIRED PERMISSION:', permission);
     return res.status(403).json({ error: 'Forbidden' });
 };
 }
+
+
+
 
 export { ROLE_PERMISSIONS };

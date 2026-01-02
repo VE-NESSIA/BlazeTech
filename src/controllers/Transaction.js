@@ -3,13 +3,15 @@ import Customer from '../models/Customer.js';
 import fraudDetector from '../services/fraudDetector.js';
 
 export async function getAllTransactions(req, res) {
-	const transactions = await Transaction.findAll({ include: [{ model: Customer, attributes: ['id', 'first_name', 'last_name'] }] });
+	const transactions = await Transaction.findAll({
+		limit: 50,
+		order: [['createdAt', 'ASC']]});
 	res.json(transactions);
 }
 
 export async function getTransactionById(req, res) {
 	const { id } = req.params;
-	const tx = await Transaction.findByPk(id, { include: [{ model: Customer, attributes: ['id', 'first_name', 'last_name'] }] });
+	const tx = await Transaction.findByPk(id, { include: [{ model: Customer}] });
 	if (!tx) return res.status(404).json({ error: 'not found' });
 	res.json(tx);
 }

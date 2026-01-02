@@ -1,36 +1,40 @@
-import {DataTypes} from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
 
-const Alert = sequelize.define('Alert', {
-    id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true }, 
 
-    customerId: { type: DataTypes.UUID, allowNull: false, field: 'customer_id', references:{ model: 'Customers', key: 'id'}},
+export default class Alerts extends Model {
+    static initModel(sequelize) {
+    Alerts.init(
+    {
+        id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true }, 
 
-    transactionId: { type: DataTypes.UUID, allowNull: false, field: 'transaction_id', references:{ model: 'Transactions', key: 'id'}},
+        customerId: { type: DataTypes.UUID, allowNull: false, field: 'customerId', references:{ model: 'Customers', key: 'id'}},
 
-    alert_type:{ type: DataTypes.ENUM('KYC', 'Fraud', 'Compliance', 'Risk'), allowNull: false },
+        transactionId: { type: DataTypes.UUID, allowNull: false, field: 'transactionId', references:{ model: 'Transactions', key: 'id'}},
 
-    severity:{ type: DataTypes.ENUM('low', 'medium', 'high', 'critical'), defaultValue: 'low'}, 
+        api_client_id: {type: DataTypes.UUID,allowNull: false},
+
+        alert_type:{ type: DataTypes.ENUM('KYC', 'Fraud', 'Compliance', 'Risk'), allowNull: false },
+
+        severity:{ type: DataTypes.ENUM('low', 'medium', 'high', 'critical')}, 
     
-    color: { type: DataTypes.ENUM('green', 'yellow', 'red'), defaultValue: 'green' },
+        color: { type: DataTypes.ENUM('green', 'yellow', 'red'), defaultValue: 'green' },
 
-    description:{ type: DataTypes.TEXT, allowNull: true },
+        status: {type: DataTypes.ENUM('dismissed', 'investigating','resolved', 'open'), allowNull: false},
 
-    resolved: {type: DataTypes.BOOLEAN, defaultValue: false},
-
-    resolvedAt: { type:DataTypes.DATE, allowNull: true, field: 'resolved_at'},
-
-    resolution_notes: {type: DataTypes.STRING, allowNull: true}},
-
+        description:{ type: DataTypes.TEXT, allowNull: true },
+    },
 
     {
+        sequelize,
+        modelName: 'Alerts',
         tableName: 'Alerts',
         timestamps: true,
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
-        resolverAt: 'resolver_at',
-        underscored: true
-    });
+        underscored: false
+    }
+    );
 
 
-    export default Alert;
+return Alerts;
+
+    }};

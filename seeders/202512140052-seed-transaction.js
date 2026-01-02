@@ -21,7 +21,7 @@ async up(queryInterface, Sequelize) {
     id: faker.string.uuid(),
     customerId: randomCustomer.id,
     amount: parseFloat(faker.finance.amount({ min: 10, max: 50000, dec: 2 })),
-    currency: faker.helpers.arrayElement(['USD', 'EUR', 'GBP', 'NGN', 'KES', 'GHS']),
+    currency: faker.helpers.arrayElement(['NGN', 'GHS', 'USD','EUR', 'JPY','GBP','CND']),
     transaction_type: faker.helpers.arrayElement(['deposit', 'withdrawal', 'transfer_in', 'transfer_out', 'payment', 'refund']),
     status: faker.helpers.arrayElement(['pending', 'completed', 'failed', 'reversed']),
     location: JSON.stringify( faker.location.city()),
@@ -29,7 +29,7 @@ async up(queryInterface, Sequelize) {
     device_id: faker.string.uuid(),
     risk_level: faker.helpers.arrayElement(['low', 'medium', 'high']),
     fraud_score: faker.number.int({ min: 0, max: 100 }),
-    fraud_flags: JSON.stringify([faker.word.adjective(), faker.word.adjective()]),
+    fraud_flags: JSON.stringify([faker.helpers.arrayElement(['Severe', 'Moderate', ' Minor', 'Urgent'])]),
     createdAt: new Date(),
     updatedAt: new Date()
     });
@@ -40,7 +40,7 @@ async up(queryInterface, Sequelize) {
 },
 
 async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Transactions', null, {});
+    await queryInterface.bulkDelete('Transactions',  null, {});
     console.log(` Removed all transaction records`);
 }
 };

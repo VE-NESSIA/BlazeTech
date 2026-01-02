@@ -21,7 +21,6 @@ async up(queryInterface, Sequelize) {
     permissions: JSON.stringify(['transactions:read', 'customers:read', 'alerts:write', 'risk_scores:read']),
     active: faker.datatype.boolean({ probability: 0.9 }),
     created_at: new Date(),
-    last_used: faker.date.recent(),
     updated_at: new Date()
     
     });

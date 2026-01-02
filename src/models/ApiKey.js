@@ -1,33 +1,44 @@
-import DataTypes from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
 
-const ApiKey = sequelize.define('ApiKey', {
-id: { type: DataTypes.STRING, primaryKey: true },
 
-name: { type: DataTypes.STRING, allowNull: false },
+export default class ApiKey extends Model {
+    static initModel(sequelize) {
+    ApiKey.init(
+    {
+        id: { type: DataTypes.STRING, primaryKey: true },
 
-hashed_key: { type: DataTypes.STRING, allowNull: false },
+        name: { type: DataTypes.STRING, allowNull: false },
 
-api_client_id: { type: DataTypes.UUID, allowNull: true },
+        hashed_key: { type: DataTypes.STRING, allowNull: false },
 
-org_id: { type: DataTypes.UUID, allowNull: true },
+        api_client_id: { type: DataTypes.UUID, allowNull: true },
 
-permissions: { type: DataTypes.JSONB, allowNull: true, defaultValue: [] },
+        org_id: { type: DataTypes.UUID, allowNull: true },
 
-revoked: { type: DataTypes.BOOLEAN, defaultValue: false },
+        permissions: { type: DataTypes.JSONB, allowNull: true, defaultValue: [] },
 
-revoked_at: { type: DataTypes.DATE, allowNull: true },
+        revoked: { type: DataTypes.BOOLEAN, defaultValue: false },
 
-last_rotated_at: { type: DataTypes.DATE, allowNull: true },
+        revoked_at: { type: DataTypes.DATE, allowNull: true },
 
-created_by: { type: DataTypes.STRING, allowNull: true }
+        last_rotated_at: { type: DataTypes.DATE, allowNull: true },
+
+        created_by: { type: DataTypes.STRING, allowNull: true }
 },
 
-{
-tableName: 'ApiKeys',
-timestamps: true,
-createdAt: 'created_at',
-updatedAt: 'updated_at'
-});
 
-export default ApiKey;
+    {
+        sequelize,
+        modelName: 'ApiKey',
+        tableName: 'ApiKeys',
+        timestamps: false,
+        createdAt: 'created_at',
+        updatedAt: 'updated_at'
+    }
+    );
+
+
+return ApiKey;
+
+    }};

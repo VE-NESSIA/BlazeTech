@@ -10,7 +10,7 @@ async up (queryInterface, Sequelize) {
     
         hashed_key: { type: Sequelize.STRING, allowNull: false },
     
-        api_client_id: { type: Sequelize.UUID, allowNull: true },
+        api_client_id: { type: Sequelize.UUID, field:'client_id', allowNull: true },
     
         org_id: { type: Sequelize.UUID, allowNull: true },
     

@@ -1,32 +1,60 @@
-import DataTypes from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
 
-const ApiClient = sequelize.define('ApiClient', {
-    id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true},
 
-    name: { type:DataTypes.STRING, allowNull: false},
+export default class ApiClient extends Model {
+    static initModel(sequelize) {
+    ApiClient.init(
+    {
+        id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true},
 
-    password:{ type:DataTypes.STRING, allowNull: false},
+        name: { type:DataTypes.STRING, allowNull: false},
 
-    work_email: {type: DataTypes.STRING, allowNull: false, unique: true, validate:{ isEmail:true}},
+        password:{ type:DataTypes.STRING, allowNull: false},
 
-    api_key: {type: DataTypes.STRING, unique: true, allowNull: false},
+        work_email: {type: DataTypes.STRING, allowNull: false, unique: true, validate:{ isEmail:true}},
 
-    occupational_role: {type: DataTypes.ENUM('Compliance Officer', 'Fraud Analyst', 'Risk Manager', 'Operations/Admin', 'Developer/Technical', 'Executive'), defaultValue: 'Compliance Officer'},
+        api_key: {type: DataTypes.STRING, unique: true, allowNull: false},
 
-    role: {type: DataTypes.ENUM('admin', 'user', 'viewer'), defaultValue: 'user'},
+        occupational_role: {type: DataTypes.ENUM('Compliance Officer', 'Fraud Analyst', 'Risk Manager', 'Operations/Admin', 'Developer/Technical', 'Executive'), defaultValue: 'Compliance Officer'},
 
-    permissions:{ type:DataTypes.JSONB, defaultValue:['read_customers', 'check_transactions', 'view_alerts']},
+        role: {type: DataTypes.ENUM('admin', 'user', 'viewer'), defaultValue: 'user'},
 
-    active:{ type: DataTypes.BOOLEAN, defaultValue: true}
+        email_verified: {type: DataTypes.BOOLEAN, defaultValue:false},
+
+        otp_hash: {type: DataTypes.STRING, allowNull: true},
+
+        otp_expires_at: {type: DataTypes.DATE, allowNull: true},
+
+        permissions:{ type:DataTypes.JSONB, defaultValue:['read_customers', 'check_transactions', 'view_alerts']},
+
+        active:{ type: DataTypes.BOOLEAN, defaultValue: true},
+
+        created_at: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        },
+
+        updated_at: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        }
 
 
 },
-{ tableName: 'ApiClient',
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
-    underscored: true
-});
 
-export default ApiClient;
+    {
+        sequelize,
+        modelName: 'ApiClient',
+        tableName: 'ApiClient',
+        timestamps: true,
+        underscored: true,
+        createdAt: 'created_at',
+        updatedAt: 'updated_at'
+    }
+    );
+
+
+return ApiClient;
+
+    }};

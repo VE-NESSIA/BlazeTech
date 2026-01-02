@@ -15,7 +15,7 @@ const sequelize = new Sequelize(database, username, password,{
 
         host: host,
         port: port,
-        dialect: process.env.DB_DIALECT,
+        dialect: process.env.DB_DIALECT || 'postgres',
         logging: process.env.NODE_ENV ? console.log : false,
         dialectOptions: {
             ssl:{

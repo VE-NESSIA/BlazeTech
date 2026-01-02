@@ -21,14 +21,13 @@ async up(queryInterface, Sequelize) {
         
     id: faker.string.uuid(),
     customerId: tx.customerId,
-        transactionId: tx.id,
+    transactionId: tx.id,
+    //api_client_id: faker.string.uuid(),
     alert_type: faker.helpers.arrayElement(['KYC', 'Fraud', 'Compliance', 'Risk']),
     severity: faker.helpers.arrayElement(['low', 'medium', 'high', 'critical']),
+    status: faker.helpers.arrayElement(['dismissed', 'investigating','resolved', 'open']),
     color: faker.helpers.arrayElement(['green', 'yellow', 'red']),
     description: faker.lorem.paragraph().slice(0,255),
-    resolved: faker.datatype.boolean(),
-    resolvedAt: faker.date.recent(),
-    resolution_notes: faker.lorem.paragraph().slice(0,255),
     createdAt: new Date(),
     updatedAt: new Date(), 
     });
