@@ -97,7 +97,7 @@ try {
         return res.status(400).json({ error: 'OTP expired' });
     }
 
-    const valid = await bcrypt.compare(otp, client.otp_hash);
+    const valid = await bcrypt.compare(String(otp), client.otp_hash);
     if (!valid) {
         return res.status(400).json({ error: 'Invalid OTP' });
     }
@@ -119,11 +119,57 @@ try {
     return res.json({ message: 'Email verified successfully' });
 } catch (err) {
     console.error('verifyOtp error', err);
-    res.status(500).json({ error: 'internal error' });
+    res.status(500).json({ error: 'internal error', message:err.message });
 }
 }
 
-export default { signup, login, verifyOtp
-    
+
+export const resendOtp = async (req, res) => {
+try {
+    const { work_email } = req.body;
+
+    if (!work_email) {
+        return res.status(400).json({ error: 'Work email is required' });
+    }
+
+    const client = await ApiClient.findOne({ where: { work_email } });
+
+    if (!client) {
+        return res.status(404).json({ error: 'Client not found' });
+    }
+
+    if (client.email_verified) {
+        return res.status(400).json({ error: 'Email already verified' });
+    }
+
+    // Generate new OTP
+    const otp = crypto.randomInt(100000, 999999).toString();
+
+    const otpHash = await bcrypt.hash(otp, 10);
+
+    client.otp_hash = otpHash;
+    client.otp_expires_at = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    await client.save();
+
+    // Send OTP to WORK email (API client email)
+    await sendOtpEmail({
+        toEmail: client.work_email,
+        otp
+    });
+
+    return res.status(200).json({
+        message: 'OTP resent successfully'
+    });
+
+} catch (error) {
+    console.error('Resend OTP error:', error);
+    return res.status(500).json({ error: 'Failed to resend OTP' });
+}
 };
+
+
+export default { signup, login, verifyOtp, resendOtp};
+    
+
 

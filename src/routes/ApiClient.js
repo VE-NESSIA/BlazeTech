@@ -1,11 +1,11 @@
 import express from 'express';
-import { signup, login, verifyOtp } from '../controllers/ApiClient.js';
-import { requireVerifiedClient } from '../middleware/requireVerifiedClient.js'
+import { signup, login, verifyOtp, resendOtp } from '../controllers/ApiClient.js';
 
 const router = express.Router();
 
 router.post('/signup', signup);
-router.post('/verify-otp',requireVerifiedClient, verifyOtp);
+router.post('/verify-otp', verifyOtp);
 router.post('/login', login);
+router.post('/resend-otp', resendOtp);
 
 export default router;
