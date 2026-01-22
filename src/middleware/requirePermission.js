@@ -1,40 +1,27 @@
-const ROLE_PERMISSIONS = {
-  // platform_admin has full platform access
-platform_admin: ['*'],
+import { ROLE_PERMISSIONS } from '../config/permissions.js';
 
-user: ["read_customers","check_transactions","view_alerts", 'view_risk_scores'],
-
-
-  // org_admin can manage their organization and keys
-org_admin: ['manage_api_keys', 'read_customers', 'view_alerts', 'view_risk_scores', 'manage_clients'],
-
-  // api_key_manager has only key lifecycle permissions
-api_key_manager: ['manage_api_keys']
-};
-
-export default function requirePermission(permission) {
-return (req, res, next) => {
-    const user = req.apiUser;
-    if (!user) return res.status(401).json({ error: 'Not authenticated' });
-
-    // Direct user permissions (explicitly granted)
-    if (Array.isArray(user.permissions) && user.permissions.includes(permission)) {
-    return next();
+export function requirePermission(permission) {
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    // Role-scoped permissions
-    const rolePerms = ROLE_PERMISSIONS[user.role];
-    if (Array.isArray(rolePerms)) {
-    if (rolePerms.includes('*') || rolePerms.includes(permission)) return next();
+    const { role, permissions = [] } = req.user;
+
+    // Explicit user permissions override role
+    const rolePermissions = ROLE_PERMISSIONS[role] || [];
+    const effectivePermissions = new Set([
+      ...rolePermissions,
+      ...permissions
+    ]);
+
+    if (!effectivePermissions.has(permission)) {
+      return res.status(403).json({
+        error: 'Forbidden',
+        message: `Missing permission: ${permission}`
+      });
     }
 
-    console.log('USER:', req.user);
-    console.log('REQUIRED PERMISSION:', permission);
-    return res.status(403).json({ error: 'Forbidden' });
-};
+    next();
+  };
 }
-
-
-
-
-export { ROLE_PERMISSIONS };

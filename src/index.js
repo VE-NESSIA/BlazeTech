@@ -7,6 +7,7 @@ import alertRoutes from './routes/Alert.js';
 import riskScoreRoutes from './routes/RiskScore.js';
 import apiKeyRoutes from './routes/ApiKey.js';
 import apiClientRoutes from './routes/ApiClient.js';
+import ingestionRoutes from './routes/ingestion.js';
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use('/alerts', alertRoutes);
 app.use('/risk-scores', riskScoreRoutes);
 app.use('/api-keys', apiKeyRoutes);
 app.use('/api-clients', apiClientRoutes);
+app.use('/api/ingest', ingestionRoutes);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

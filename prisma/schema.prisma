@@ -1,0 +1,207 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model ApiClient {
+  id              String      @id @default(uuid())
+  name            String
+  workEmail       String      @unique
+  password        String
+  role            String
+  permissions     String[]
+  emailVerified   Boolean     @default(false)
+  otpHash         String?
+  otpExpiresAt    DateTime?
+  active          Boolean     @default(true)
+
+  // relations
+  apiKeys         ApiKey[]
+  customers       Customer[]
+  alerts          Alert[]
+  auditLogs       AuditLog[]
+  riskScores      RiskScore[]
+  transactions    Transaction[]
+  orgInfo         OrgInfo?
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+
+model ApiKey {
+  id            String     @id @default(uuid())
+  name          String
+  hashedKey     String
+  permissions   String[]
+  revoked       Boolean    @default(false)
+  revokedAt     DateTime?
+
+  apiClientId   String
+  apiClient     ApiClient  @relation(fields: [apiClientId], references: [id])
+
+  createdAt     DateTime   @default(now())
+  lastRotatedAt DateTime?
+}
+
+
+model Customer {
+  id            String         @id @default(uuid())
+  name      String
+  email         String?
+  phone         String?
+  gender        String?
+  address       String?
+  nationalId    String?
+  riskScore     Float?
+  country       String?
+  kycStatus     String?
+  ipAddress     String?
+
+  apiClientId   String
+  apiClient     ApiClient      @relation(fields: [apiClientId], references: [id])
+
+  transactions  Transaction[]
+  alerts        Alert[]
+  riskScores    RiskScore[]
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+
+model Transaction {
+  id              String     @id @default(uuid())
+  amount          Float
+  currency        String
+  transactionType String
+  status          String
+  location        Json?
+  deviceId        String?
+  ipAddress       String?
+  fraudScore      Float?
+  fraudFlags      String[]
+  riskLevel       String?
+
+  customerId      String
+  customer        Customer   @relation(fields: [customerId], references: [id])
+
+  apiClientId     String
+  apiClient       ApiClient  @relation(fields: [apiClientId], references: [id])
+
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
+
+model Alert {
+  id            String     @id @default(uuid())
+  title         String
+  description   String
+  severity      String     // low | medium | high | critical
+  status        String     // open | investigating | resolved
+
+  customerId    String
+  customer      Customer   @relation(fields: [customerId], references: [id])
+
+  apiClientId   String
+  apiClient     ApiClient  @relation(fields: [apiClientId], references: [id])
+
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+
+model RiskScore {
+  id            String     @id @default(uuid())
+  score         Float
+  type          String     // behavioral | transaction | compliance
+  factors       Json?
+
+  customerId    String
+  customer      Customer   @relation(fields: [customerId], references: [id])
+
+  apiClientId   String
+  apiClient     ApiClient  @relation(fields: [apiClientId], references: [id])
+
+  createdAt     DateTime   @default(now())
+}
+
+
+model AuditLog {
+  id            String     @id @default(uuid())
+  action        String
+  entityType    String
+  entityId      String?
+  ipAddress     String?
+  userAgent     String?
+  details       Json?
+
+  apiClientId   String
+  apiClient     ApiClient  @relation(fields: [apiClientId], references: [id])
+
+  createdAt     DateTime   @default(now())
+}
+
+
+model OrgInfo {
+  id            String     @id @default(uuid())
+  companyName   String
+  country       String
+  industry      String?
+  subscription  String?
+  tier          String?
+
+  apiClientId   String     @unique
+  apiClient     ApiClient  @relation(fields: [apiClientId], references: [id])
+
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model Case {
+  id            String   @id @default(uuid())
+  alertId       String
+  customerId    String
+  assignedToId  String?
+  status        CaseStatus @default(OPEN)
+  priority      CasePriority
+  notes         String?
+  resolution    String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  alert         Alert     @relation(fields: [alertId], references: [id])
+  customer      Customer  @relation(fields: [customerId], references: [id])
+  assignedTo    ApiClient? @relation(fields: [assignedToId], references: [id])
+
+  @@index([status])
+  @@index([priority])
+}
+
+enum CaseStatus {
+  OPEN
+  IN_REVIEW
+  ESCALATED
+  CLOSED
+}
+
+enum CasePriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+
